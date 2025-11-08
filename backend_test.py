@@ -422,12 +422,17 @@ class AuthInventoryAPITester:
         return success
 
     def test_get_inventory(self):
-        """Test getting inventory"""
+        """Test getting inventory (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         success, response = self.run_test(
-            "Get Inventory",
+            "Get Inventory (Authenticated)",
             "GET",
             "inventory",
-            200
+            200,
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} inventory items")
@@ -437,47 +442,49 @@ class AuthInventoryAPITester:
         return success
 
     def test_get_inventory_filtered_by_product(self):
-        """Test getting inventory filtered by product"""
-        if not self.product_id:
-            print("⚠️  Skipping - No product ID available")
+        """Test getting inventory filtered by product (requires auth)"""
+        if not self.product_id or not self.session_token:
+            print("⚠️  Skipping - No product ID or session token available")
             return False
             
         success, response = self.run_test(
-            "Get Inventory (Filtered by Product)",
+            "Get Inventory Filtered by Product (Authenticated)",
             "GET",
             "inventory",
             200,
-            params={"product_id": self.product_id}
+            params={"product_id": self.product_id},
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} inventory items for product")
         return success
 
     def test_get_inventory_filtered_by_warehouse(self):
-        """Test getting inventory filtered by warehouse"""
-        if not self.warehouse_id:
-            print("⚠️  Skipping - No warehouse ID available")
+        """Test getting inventory filtered by warehouse (requires auth)"""
+        if not self.warehouse_id or not self.session_token:
+            print("⚠️  Skipping - No warehouse ID or session token available")
             return False
             
         success, response = self.run_test(
-            "Get Inventory (Filtered by Warehouse)",
+            "Get Inventory Filtered by Warehouse (Authenticated)",
             "GET",
             "inventory",
             200,
-            params={"warehouse_id": self.warehouse_id}
+            params={"warehouse_id": self.warehouse_id},
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} inventory items for warehouse")
         return success
 
     def test_stock_issue(self):
-        """Test creating a stock issue (outgoing inventory)"""
-        if not self.product_id or not self.warehouse_id:
-            print("⚠️  Skipping - Missing product or warehouse ID")
+        """Test creating a stock issue (requires auth)"""
+        if not self.product_id or not self.warehouse_id or not self.session_token:
+            print("⚠️  Skipping - Missing product/warehouse ID or session token")
             return False
             
         success, response = self.run_test(
-            "Create Stock Issue",
+            "Create Stock Issue (Authenticated)",
             "POST",
             "stock-moves",
             200,
@@ -489,18 +496,19 @@ class AuthInventoryAPITester:
                 "quantity": 20,
                 "reference": "SO-001",
                 "notes": "Sales order fulfillment"
-            }
+            },
+            auth_token=self.session_token
         )
         return success
 
     def test_inventory_adjustment(self):
-        """Test creating an inventory adjustment"""
-        if not self.product_id or not self.warehouse_id:
-            print("⚠️  Skipping - Missing product or warehouse ID")
+        """Test creating an inventory adjustment (requires auth)"""
+        if not self.product_id or not self.warehouse_id or not self.session_token:
+            print("⚠️  Skipping - Missing product/warehouse ID or session token")
             return False
             
         success, response = self.run_test(
-            "Create Inventory Adjustment",
+            "Create Inventory Adjustment (Authenticated)",
             "POST",
             "adjustments",
             200,
@@ -510,29 +518,40 @@ class AuthInventoryAPITester:
                 "bin_id": self.bin_id,
                 "quantity_change": 5,
                 "reason": "Physical count correction"
-            }
+            },
+            auth_token=self.session_token
         )
         return success
 
     def test_get_stock_moves(self):
-        """Test getting stock moves"""
+        """Test getting stock moves (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         success, response = self.run_test(
-            "Get Stock Moves",
+            "Get Stock Moves (Authenticated)",
             "GET",
             "stock-moves",
-            200
+            200,
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} stock moves")
         return success
 
     def test_get_adjustments(self):
-        """Test getting adjustments"""
+        """Test getting adjustments (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         success, response = self.run_test(
-            "Get Adjustments",
+            "Get Adjustments (Authenticated)",
             "GET",
             "adjustments",
-            200
+            200,
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} adjustments")
