@@ -34,10 +34,10 @@ const StockMoves = () => {
   const loadData = async () => {
     try {
       const [movesRes, productsRes, warehousesRes, binsRes] = await Promise.all([
-        axios.get(`${API}/stock-moves`),
-        axios.get(`${API}/products`),
-        axios.get(`${API}/warehouses`),
-        axios.get(`${API}/bins`)
+        axios.get(`${API}/stock-moves`, { withCredentials: true }),
+        axios.get(`${API}/products`, { withCredentials: true }),
+        axios.get(`${API}/warehouses`, { withCredentials: true }),
+        axios.get(`${API}/bins`, { withCredentials: true })
       ]);
       setMoves(movesRes.data);
       setProducts(productsRes.data);
