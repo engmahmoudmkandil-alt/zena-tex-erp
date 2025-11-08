@@ -398,13 +398,13 @@ class AuthInventoryAPITester:
         return success
 
     def test_stock_receipt(self):
-        """Test creating a stock receipt (incoming inventory)"""
-        if not self.product_id or not self.warehouse_id:
-            print("⚠️  Skipping - Missing product or warehouse ID")
+        """Test creating a stock receipt (requires auth)"""
+        if not self.product_id or not self.warehouse_id or not self.session_token:
+            print("⚠️  Skipping - Missing product/warehouse ID or session token")
             return False
             
         success, response = self.run_test(
-            "Create Stock Receipt",
+            "Create Stock Receipt (Authenticated)",
             "POST",
             "stock-moves",
             200,
@@ -416,7 +416,8 @@ class AuthInventoryAPITester:
                 "quantity": 100,
                 "reference": "PO-001",
                 "notes": "Initial stock receipt"
-            }
+            },
+            auth_token=self.session_token
         )
         return success
 
