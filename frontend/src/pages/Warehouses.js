@@ -129,10 +129,11 @@ const Warehouses = () => {
                 Add Bin
               </Button>
             </DialogTrigger>
-            <DialogContent data-testid="bin-dialog">
+            <DialogContent data-testid="bin-dialog" aria-describedby="bin-dialog-description">
               <DialogHeader>
                 <DialogTitle>Create New Bin</DialogTitle>
               </DialogHeader>
+              <p id="bin-dialog-description" className="sr-only">Form to create a new bin linked to a warehouse</p>
               <form onSubmit={handleBinSubmit} className="space-y-4">
                 <div>
                   <Label htmlFor="bin-warehouse">Warehouse</Label>
