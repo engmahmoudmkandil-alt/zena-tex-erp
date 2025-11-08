@@ -1,8 +1,9 @@
 import requests
 import sys
 from datetime import datetime
+import json
 
-class InventoryAPITester:
+class AuthInventoryAPITester:
     def __init__(self, base_url="https://manufactory-data.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.tests_run = 0
@@ -13,6 +14,13 @@ class InventoryAPITester:
         self.product_id = None
         self.warehouse_id = None
         self.bin_id = None
+        
+        # Authentication data
+        self.session_token = None
+        self.user_data = None
+        self.admin_session_token = None
+        self.admin_user_data = None
+        self.test_user_id = None
 
     def run_test(self, name, method, endpoint, expected_status, data=None, params=None):
         """Run a single API test"""
