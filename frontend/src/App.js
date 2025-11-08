@@ -1,9 +1,10 @@
 import { useState, useEffect, createContext, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
-import { Package, Warehouse, TrendingUp, History, Settings, Menu, X, LogOut, Users, FileText } from "lucide-react";
+import { Package, Warehouse, TrendingUp, History, Settings, Menu, X, LogOut, Users, FileText, Layers, Factory, UserCog, Truck, UserSquare2 } from "lucide-react";
 import Dashboard from "@/pages/Dashboard";
 import Products from "@/pages/Products";
 import Warehouses from "@/pages/Warehouses";
@@ -14,6 +15,12 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import UserManagement from "@/pages/UserManagement";
 import AuditLogs from "@/pages/AuditLogs";
+import BOMs from "@/pages/BOMs";
+import WorkCenters from "@/pages/WorkCenters";
+import Employees from "@/pages/Employees";
+import Suppliers from "@/pages/Suppliers";
+import Customers from "@/pages/Customers";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
