@@ -253,14 +253,28 @@ class AuthInventoryAPITester:
             print("⚠️  Skipping - No admin session or test user ID available")
             return False
             
+        # Test changing role to Production Manager
         success, response = self.run_test(
-            "Update User Role",
+            "Update User Role to Production Manager",
             "PATCH",
             f"users/{self.test_user_id}/role",
             200,
             params={"role": "Production Manager"},
             auth_token=self.admin_session_token
         )
+        
+        if success:
+            # Change role back to Inventory Officer for subsequent tests
+            success2, response2 = self.run_test(
+                "Update User Role back to Inventory Officer",
+                "PATCH",
+                f"users/{self.test_user_id}/role",
+                200,
+                params={"role": "Inventory Officer"},
+                auth_token=self.admin_session_token
+            )
+            return success2
+        
         return success
 
     # ========== INVENTORY TESTS (WITH AUTH) ==========
