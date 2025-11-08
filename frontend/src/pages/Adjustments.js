@@ -30,10 +30,10 @@ const Adjustments = () => {
   const loadData = async () => {
     try {
       const [adjustmentsRes, productsRes, warehousesRes, binsRes] = await Promise.all([
-        axios.get(`${API}/adjustments`),
-        axios.get(`${API}/products`),
-        axios.get(`${API}/warehouses`),
-        axios.get(`${API}/bins`)
+        axios.get(`${API}/adjustments`, { withCredentials: true }),
+        axios.get(`${API}/products`, { withCredentials: true }),
+        axios.get(`${API}/warehouses`, { withCredentials: true }),
+        axios.get(`${API}/bins`, { withCredentials: true })
       ]);
       setAdjustments(adjustmentsRes.data);
       setProducts(productsRes.data);
