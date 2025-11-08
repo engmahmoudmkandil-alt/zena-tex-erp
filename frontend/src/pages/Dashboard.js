@@ -20,10 +20,10 @@ const Dashboard = () => {
   const loadDashboardData = async () => {
     try {
       const [products, warehouses, inventory, moves] = await Promise.all([
-        axios.get(`${API}/products`),
-        axios.get(`${API}/warehouses`),
-        axios.get(`${API}/inventory`),
-        axios.get(`${API}/stock-moves`)
+        axios.get(`${API}/products`, { withCredentials: true }),
+        axios.get(`${API}/warehouses`, { withCredentials: true }),
+        axios.get(`${API}/inventory`, { withCredentials: true }),
+        axios.get(`${API}/stock-moves`, { withCredentials: true })
       ]);
 
       setStats({
