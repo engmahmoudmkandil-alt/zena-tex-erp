@@ -363,29 +363,35 @@ class AuthInventoryAPITester:
         return False
 
     def test_get_bins(self):
-        """Test getting all bins"""
+        """Test getting all bins (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         success, response = self.run_test(
-            "Get Bins",
+            "Get Bins (Authenticated)",
             "GET",
             "bins",
-            200
+            200,
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} bins")
         return success
 
     def test_get_bins_filtered(self):
-        """Test getting bins filtered by warehouse"""
-        if not self.warehouse_id:
-            print("⚠️  Skipping - No warehouse ID available")
+        """Test getting bins filtered by warehouse (requires auth)"""
+        if not self.warehouse_id or not self.session_token:
+            print("⚠️  Skipping - No warehouse ID or session token available")
             return False
             
         success, response = self.run_test(
-            "Get Bins (Filtered by Warehouse)",
+            "Get Bins Filtered (Authenticated)",
             "GET",
             "bins",
             200,
-            params={"warehouse_id": self.warehouse_id}
+            params={"warehouse_id": self.warehouse_id},
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} bins for warehouse")
