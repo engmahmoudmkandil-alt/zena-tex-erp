@@ -250,11 +250,17 @@ class AuthInventoryAPITester:
         )
         return success
 
+    # ========== INVENTORY TESTS (WITH AUTH) ==========
+    
     def test_create_product(self):
-        """Test creating a product"""
+        """Test creating a product (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         timestamp = datetime.now().strftime('%H%M%S')
         success, response = self.run_test(
-            "Create Product",
+            "Create Product (Authenticated)",
             "POST",
             "products",
             200,
@@ -263,7 +269,8 @@ class AuthInventoryAPITester:
                 "name": f"Test Product {timestamp}",
                 "description": "Test product for inventory",
                 "unit": "pcs"
-            }
+            },
+            auth_token=self.session_token
         )
         if success and 'id' in response:
             self.product_id = response['id']
