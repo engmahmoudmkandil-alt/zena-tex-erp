@@ -23,8 +23,8 @@ const Inventory = () => {
   const loadData = async () => {
     try {
       const [productsRes, warehousesRes] = await Promise.all([
-        axios.get(`${API}/products`),
-        axios.get(`${API}/warehouses`)
+        axios.get(`${API}/products`, { withCredentials: true }),
+        axios.get(`${API}/warehouses`, { withCredentials: true })
       ]);
       setProducts(productsRes.data);
       setWarehouses(warehousesRes.data);
