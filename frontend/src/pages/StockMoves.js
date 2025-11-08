@@ -109,10 +109,11 @@ const StockMoves = () => {
               Create Stock Move
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="stock-move-dialog">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" data-testid="stock-move-dialog" aria-describedby="stock-move-dialog-description">
             <DialogHeader>
               <DialogTitle>Create Stock Move</DialogTitle>
             </DialogHeader>
+            <p id="stock-move-dialog-description" className="sr-only">Form to create stock movements including receipts, issues, and transfers</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
