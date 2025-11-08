@@ -457,7 +457,14 @@ async def verify_otp(user_id: str, otp_code: str, response: Response):
     if not otp:
         raise HTTPException(status_code=401, detail="Invalid OTP")
     
-    if otp["expires_at"] < datetime.now(timezone.utc):
+    # Check OTP expiry - handle timezone-aware/naive datetime comparison
+    expires_at = otp["expires_at"]
+    if isinstance(expires_at, datetime):
+        # If it's timezone-naive, assume it's UTC
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="OTP expired")
     
     # Mark as verified
