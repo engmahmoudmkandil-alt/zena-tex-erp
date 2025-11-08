@@ -159,16 +159,22 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   
   const menuItems = [
-    { path: "/", label: "Dashboard", icon: TrendingUp, roles: [] },
-    { path: "/products", label: "Products", icon: Package, roles: [] },
-    { path: "/warehouses", label: "Warehouses", icon: Warehouse, roles: [] },
-    { path: "/inventory", label: "Inventory", icon: Settings, roles: [] },
-    { path: "/stock-moves", label: "Stock Moves", icon: History, roles: [] },
-    { path: "/adjustments", label: "Adjustments", icon: Settings, roles: [] },
-    { path: "/users", label: "User Management", icon: Users, roles: ["Admin"] },
-    { path: "/audit-logs", label: "Audit Logs", icon: FileText, roles: ["Admin", "Accountant", "CEO/Viewer"] },
+    { path: "/", label: "nav_dashboard", icon: TrendingUp, roles: [] },
+    { path: "/products", label: "nav_products", icon: Package, roles: [] },
+    { path: "/boms", label: "nav_boms", icon: Layers, roles: [] },
+    { path: "/work-centers", label: "nav_work_centers", icon: Factory, roles: [] },
+    { path: "/warehouses", label: "nav_warehouses", icon: Warehouse, roles: [] },
+    { path: "/inventory", label: "nav_inventory", icon: Settings, roles: [] },
+    { path: "/stock-moves", label: "nav_stock_moves", icon: History, roles: [] },
+    { path: "/adjustments", label: "nav_adjustments", icon: Settings, roles: [] },
+    { path: "/employees", label: "nav_employees", icon: UserCog, roles: [] },
+    { path: "/suppliers", label: "nav_suppliers", icon: Truck, roles: [] },
+    { path: "/customers", label: "nav_customers", icon: UserSquare2, roles: [] },
+    { path: "/users", label: "nav_user_management", icon: Users, roles: ["Admin"] },
+    { path: "/audit-logs", label: "nav_audit_logs", icon: FileText, roles: ["Admin", "Accountant", "CEO/Viewer"] },
   ];
 
   const filteredMenuItems = menuItems.filter(item => {
