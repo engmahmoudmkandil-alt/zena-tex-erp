@@ -199,7 +199,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       `}>
         <div className="p-6 flex-1">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-xl font-bold" data-testid="app-title">InventoryPro</h1>
+            <h1 className="text-xl font-bold" data-testid="app-title">{t('app_name')}</h1>
             <button 
               className="lg:hidden"
               onClick={() => setIsOpen(false)}
