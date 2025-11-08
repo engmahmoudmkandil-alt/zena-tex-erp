@@ -21,6 +21,8 @@ class AuthInventoryAPITester:
         self.admin_session_token = None
         self.admin_user_data = None
         self.test_user_id = None
+        self.test_user_email = None
+        self.admin_user_email = None
 
     def run_test(self, name, method, endpoint, expected_status, data=None, params=None, auth_token=None, cookies=None):
         """Run a single API test"""
