@@ -112,14 +112,17 @@ class AuthInventoryAPITester:
 
     def test_login_user(self):
         """Test user login"""
-        timestamp = datetime.now().strftime('%H%M%S')
+        if not self.test_user_email:
+            print("⚠️  Skipping - No test user email available")
+            return False
+            
         success, response = self.run_test(
             "Login User",
             "POST",
             "auth/login",
             200,
             data={
-                "email": f"test.user.{timestamp}@example.com",
+                "email": self.test_user_email,
                 "password": "TestPass123!"
             }
         )
@@ -132,14 +135,17 @@ class AuthInventoryAPITester:
 
     def test_login_admin_user(self):
         """Test admin login"""
-        timestamp = datetime.now().strftime('%H%M%S')
+        if not self.admin_user_email:
+            print("⚠️  Skipping - No admin user email available")
+            return False
+            
         success, response = self.run_test(
             "Login Admin User",
             "POST",
             "auth/login",
             200,
             data={
-                "email": f"admin.user.{timestamp}@example.com",
+                "email": self.admin_user_email,
                 "password": "AdminPass123!"
             }
         )
