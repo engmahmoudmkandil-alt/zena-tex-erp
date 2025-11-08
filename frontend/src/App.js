@@ -276,7 +276,7 @@ const Layout = ({ children }) => {
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
       
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
           <button 
             className="lg:hidden"
             onClick={() => setSidebarOpen(true)}
@@ -284,6 +284,9 @@ const Layout = ({ children }) => {
           >
             <Menu size={24} />
           </button>
+          <div className="ml-auto">
+            <LanguageSwitcher />
+          </div>
         </div>
         
         <main className="flex-1 overflow-auto p-6">
