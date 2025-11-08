@@ -40,7 +40,7 @@ const Warehouses = () => {
   const handleWarehouseSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/warehouses`, warehouseForm);
+      await axios.post(`${API}/warehouses`, warehouseForm, { withCredentials: true });
       toast.success("Warehouse created successfully");
       setWarehouseDialogOpen(false);
       setWarehouseForm({ code: "", name: "", location: "" });
