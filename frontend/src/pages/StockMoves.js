@@ -64,7 +64,7 @@ const StockMoves = () => {
         notes: formData.notes || null
       };
       
-      await axios.post(`${API}/stock-moves`, payload);
+      await axios.post(`${API}/stock-moves`, payload, { withCredentials: true });
       toast.success("Stock move created successfully");
       setDialogOpen(false);
       setFormData({
