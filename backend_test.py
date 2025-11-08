@@ -415,6 +415,9 @@ class AuthInventoryAPITester:
         if not self.product_id or not self.warehouse_id or not self.session_token:
             print("⚠️  Skipping - Missing product/warehouse ID or session token")
             return False
+        
+        # First check current user to see the role
+        print(f"   User role from login: {self.user_data.get('role') if self.user_data else 'Unknown'}")
             
         success, response = self.run_test(
             "Create Stock Receipt (Inventory Officer)",
