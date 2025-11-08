@@ -211,7 +211,7 @@ const BOMs = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
           <Input
             data-testid="search-boms-input"
-            placeholder={t('search')})
+            placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
