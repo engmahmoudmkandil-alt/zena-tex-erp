@@ -55,7 +55,7 @@ const Adjustments = () => {
         bin_id: formData.bin_id || null
       };
       
-      await axios.post(`${API}/adjustments`, payload);
+      await axios.post(`${API}/adjustments`, payload, { withCredentials: true });
       toast.success("Inventory adjusted successfully");
       setDialogOpen(false);
       setFormData({
