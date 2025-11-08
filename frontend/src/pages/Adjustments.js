@@ -95,10 +95,11 @@ const Adjustments = () => {
               Create Adjustment
             </Button>
           </DialogTrigger>
-          <DialogContent data-testid="adjustment-dialog">
+          <DialogContent data-testid="adjustment-dialog" aria-describedby="adjustment-dialog-description">
             <DialogHeader>
               <DialogTitle>Create Inventory Adjustment</DialogTitle>
             </DialogHeader>
+            <p id="adjustment-dialog-description" className="sr-only">Form to create inventory adjustments for stock corrections</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="product">Product</Label>
