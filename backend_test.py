@@ -587,64 +587,95 @@ class AuthInventoryAPITester:
         return False
 
 def main():
-    print("=" * 60)
-    print("INVENTORY MANAGEMENT SYSTEM - API TESTING")
-    print("=" * 60)
+    print("=" * 80)
+    print("INVENTORY MANAGEMENT SYSTEM WITH AUTHENTICATION - API TESTING")
+    print("=" * 80)
     
-    tester = InventoryAPITester()
+    tester = AuthInventoryAPITester()
     
-    # Test sequence following the workflow
-    print("\n📦 TESTING PRODUCTS")
-    print("-" * 60)
+    # ========== AUTHENTICATION TESTS ==========
+    print("\n🔐 TESTING AUTHENTICATION & AUTHORIZATION")
+    print("-" * 80)
+    
+    # Test user registration and login
+    tester.test_register_user()
+    tester.test_register_admin_user()
+    tester.test_login_user()
+    tester.test_login_admin_user()
+    
+    # Test authentication validation
+    tester.test_get_current_user()
+    tester.test_protected_route_without_auth()
+    
+    # Test role-based access control
+    tester.test_user_management_access_denied()
+    tester.test_user_management_admin_access()
+    tester.test_audit_logs_access()
+    tester.test_role_update()
+    
+    # ========== INVENTORY TESTS (WITH AUTH) ==========
+    print("\n📦 TESTING PRODUCTS (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_create_product()
     tester.test_get_products()
     
-    print("\n🏢 TESTING WAREHOUSES")
-    print("-" * 60)
+    print("\n🏢 TESTING WAREHOUSES (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_create_warehouse()
     tester.test_get_warehouses()
     
-    print("\n📍 TESTING BINS")
-    print("-" * 60)
+    print("\n📍 TESTING BINS (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_create_bin()
     tester.test_get_bins()
     tester.test_get_bins_filtered()
     
-    print("\n📥 TESTING STOCK RECEIPT")
-    print("-" * 60)
+    print("\n📥 TESTING STOCK RECEIPT (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_stock_receipt()
     
-    print("\n📊 TESTING INVENTORY RETRIEVAL")
-    print("-" * 60)
+    print("\n📊 TESTING INVENTORY RETRIEVAL (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_get_inventory()
     tester.test_get_inventory_filtered_by_product()
     tester.test_get_inventory_filtered_by_warehouse()
     
-    print("\n📤 TESTING STOCK ISSUE")
-    print("-" * 60)
+    print("\n📤 TESTING STOCK ISSUE (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_stock_issue()
     
-    print("\n🔧 TESTING INVENTORY ADJUSTMENT")
-    print("-" * 60)
+    print("\n🔧 TESTING INVENTORY ADJUSTMENT (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_inventory_adjustment()
     
-    print("\n📜 TESTING HISTORY")
-    print("-" * 60)
+    print("\n📜 TESTING HISTORY (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.test_get_stock_moves()
     tester.test_get_adjustments()
     
-    print("\n✓ VERIFYING INVENTORY CALCULATIONS")
-    print("-" * 60)
+    print("\n✓ VERIFYING INVENTORY CALCULATIONS (WITH AUTHENTICATION)")
+    print("-" * 80)
     tester.verify_inventory_calculation()
     
+    print("\n🔓 TESTING LOGOUT")
+    print("-" * 80)
+    tester.test_logout()
+    
     # Print summary
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 80)
     print("TEST SUMMARY")
-    print("=" * 60)
+    print("=" * 80)
     print(f"Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Tests Failed: {tester.tests_run - tester.tests_passed}")
     print(f"Success Rate: {(tester.tests_passed / tester.tests_run * 100):.1f}%")
+    
+    # Print detailed results
+    print("\n📋 DETAILED RESULTS:")
+    print("-" * 80)
+    for result in tester.test_results:
+        status_icon = "✅" if result["status"] == "PASSED" else "❌"
+        print(f"{status_icon} {result['test']}: {result['status']}")
     
     return 0 if tester.tests_passed == tester.tests_run else 1
 
