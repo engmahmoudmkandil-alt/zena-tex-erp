@@ -558,18 +558,19 @@ class AuthInventoryAPITester:
         return success
 
     def verify_inventory_calculation(self):
-        """Verify that inventory is correctly calculated after all operations"""
-        if not self.product_id:
-            print("⚠️  Skipping - No product ID available")
+        """Verify that inventory is correctly calculated after all operations (requires auth)"""
+        if not self.product_id or not self.session_token:
+            print("⚠️  Skipping - No product ID or session token available")
             return False
             
         print(f"\n🔍 Verifying Inventory Calculation...")
         success, response = self.run_test(
-            "Verify Final Inventory",
+            "Verify Final Inventory (Authenticated)",
             "GET",
             "inventory",
             200,
-            params={"product_id": self.product_id}
+            params={"product_id": self.product_id},
+            auth_token=self.session_token
         )
         
         if success and len(response) > 0:
