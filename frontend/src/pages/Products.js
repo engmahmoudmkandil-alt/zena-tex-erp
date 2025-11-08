@@ -35,7 +35,7 @@ const Products = () => {
 
   const loadProducts = async () => {
     try {
-      const response = await axios.get(`${API}/products`);
+      const response = await axios.get(`${API}/products`, { withCredentials: true });
       setProducts(response.data);
       setFilteredProducts(response.data);
       setLoading(false);
