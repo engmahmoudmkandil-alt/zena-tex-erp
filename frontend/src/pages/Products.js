@@ -48,7 +48,7 @@ const Products = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/products`, formData);
+      await axios.post(`${API}/products`, formData, { withCredentials: true });
       toast.success("Product created successfully");
       setDialogOpen(false);
       setFormData({ code: "", name: "", description: "", unit: "pcs" });
