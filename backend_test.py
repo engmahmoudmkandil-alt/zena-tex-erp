@@ -296,10 +296,14 @@ class AuthInventoryAPITester:
         return success
 
     def test_create_warehouse(self):
-        """Test creating a warehouse"""
+        """Test creating a warehouse (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         timestamp = datetime.now().strftime('%H%M%S')
         success, response = self.run_test(
-            "Create Warehouse",
+            "Create Warehouse (Authenticated)",
             "POST",
             "warehouses",
             200,
@@ -307,7 +311,8 @@ class AuthInventoryAPITester:
                 "code": f"WH-{timestamp}",
                 "name": f"Test Warehouse {timestamp}",
                 "location": "Test Location"
-            }
+            },
+            auth_token=self.session_token
         )
         if success and 'id' in response:
             self.warehouse_id = response['id']
