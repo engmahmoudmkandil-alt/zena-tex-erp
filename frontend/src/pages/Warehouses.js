@@ -53,7 +53,7 @@ const Warehouses = () => {
   const handleBinSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/bins`, binForm);
+      await axios.post(`${API}/bins`, binForm, { withCredentials: true });
       toast.success("Bin created successfully");
       setBinDialogOpen(false);
       setBinForm({ warehouse_id: "", code: "", name: "" });
