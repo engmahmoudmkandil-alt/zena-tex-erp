@@ -22,19 +22,25 @@ class AuthInventoryAPITester:
         self.admin_user_data = None
         self.test_user_id = None
 
-    def run_test(self, name, method, endpoint, expected_status, data=None, params=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None, params=None, auth_token=None, cookies=None):
         """Run a single API test"""
         url = f"{self.base_url}/{endpoint}"
         headers = {'Content-Type': 'application/json'}
+        
+        # Add authentication if provided
+        if auth_token:
+            headers['Authorization'] = f'Bearer {auth_token}'
 
         self.tests_run += 1
         print(f"\n🔍 Testing {name}...")
         
         try:
             if method == 'GET':
-                response = requests.get(url, headers=headers, params=params)
+                response = requests.get(url, headers=headers, params=params, cookies=cookies)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=headers)
+                response = requests.post(url, json=data, headers=headers, cookies=cookies)
+            elif method == 'PATCH':
+                response = requests.patch(url, json=data, headers=headers, params=params, cookies=cookies)
 
             success = response.status_code == expected_status
             if success:
@@ -55,6 +61,194 @@ class AuthInventoryAPITester:
             print(f"❌ Failed - Error: {str(e)}")
             self.test_results.append({"test": name, "status": "ERROR", "error": str(e)})
             return False, {}
+
+    # ========== AUTHENTICATION TESTS ==========
+    
+    def test_register_user(self):
+        """Test user registration"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        success, response = self.run_test(
+            "Register User",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": f"test.user.{timestamp}@example.com",
+                "password": "TestPass123!",
+                "name": f"Test User {timestamp}",
+                "phone": "+1234567890",
+                "role": "Inventory Officer"
+            }
+        )
+        if success and 'user_id' in response:
+            self.test_user_id = response['user_id']
+            print(f"   Created user ID: {self.test_user_id}")
+        return success
+
+    def test_register_admin_user(self):
+        """Test admin user registration"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        success, response = self.run_test(
+            "Register Admin User",
+            "POST",
+            "auth/register",
+            200,
+            data={
+                "email": f"admin.user.{timestamp}@example.com",
+                "password": "AdminPass123!",
+                "name": f"Admin User {timestamp}",
+                "phone": "+1234567891",
+                "role": "Admin"
+            }
+        )
+        return success
+
+    def test_login_user(self):
+        """Test user login"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        success, response = self.run_test(
+            "Login User",
+            "POST",
+            "auth/login",
+            200,
+            data={
+                "email": f"test.user.{timestamp}@example.com",
+                "password": "TestPass123!"
+            }
+        )
+        if success and 'session_token' in response:
+            self.session_token = response['session_token']
+            self.user_data = response['user']
+            print(f"   Session token: {self.session_token[:20]}...")
+            print(f"   User role: {self.user_data['role']}")
+        return success
+
+    def test_login_admin_user(self):
+        """Test admin login"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        success, response = self.run_test(
+            "Login Admin User",
+            "POST",
+            "auth/login",
+            200,
+            data={
+                "email": f"admin.user.{timestamp}@example.com",
+                "password": "AdminPass123!"
+            }
+        )
+        if success and 'session_token' in response:
+            self.admin_session_token = response['session_token']
+            self.admin_user_data = response['user']
+            print(f"   Admin session token: {self.admin_session_token[:20]}...")
+            print(f"   Admin role: {self.admin_user_data['role']}")
+        return success
+
+    def test_get_current_user(self):
+        """Test getting current user info"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
+        success, response = self.run_test(
+            "Get Current User",
+            "GET",
+            "auth/me",
+            200,
+            auth_token=self.session_token
+        )
+        if success:
+            print(f"   User: {response.get('name')} ({response.get('role')})")
+        return success
+
+    def test_logout(self):
+        """Test user logout"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
+        success, response = self.run_test(
+            "Logout User",
+            "POST",
+            "auth/logout",
+            200,
+            auth_token=self.session_token
+        )
+        return success
+
+    def test_protected_route_without_auth(self):
+        """Test accessing protected route without authentication"""
+        success, response = self.run_test(
+            "Access Protected Route (No Auth)",
+            "GET",
+            "products",
+            401  # Should fail with 401
+        )
+        return success
+
+    def test_user_management_access_denied(self):
+        """Test that non-admin users cannot access user management"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
+        success, response = self.run_test(
+            "User Management Access (Non-Admin)",
+            "GET",
+            "users",
+            403,  # Should fail with 403 Forbidden
+            auth_token=self.session_token
+        )
+        return success
+
+    def test_user_management_admin_access(self):
+        """Test that admin users can access user management"""
+        if not self.admin_session_token:
+            print("⚠️  Skipping - No admin session token available")
+            return False
+            
+        success, response = self.run_test(
+            "User Management Access (Admin)",
+            "GET",
+            "users",
+            200,
+            auth_token=self.admin_session_token
+        )
+        if success:
+            print(f"   Found {len(response)} users")
+        return success
+
+    def test_audit_logs_access(self):
+        """Test audit logs access (Admin, Accountant, CEO/Viewer)"""
+        if not self.admin_session_token:
+            print("⚠️  Skipping - No admin session token available")
+            return False
+            
+        success, response = self.run_test(
+            "Audit Logs Access (Admin)",
+            "GET",
+            "audit-logs",
+            200,
+            auth_token=self.admin_session_token
+        )
+        if success:
+            print(f"   Found {len(response)} audit logs")
+        return success
+
+    def test_role_update(self):
+        """Test updating user role (Admin only)"""
+        if not self.admin_session_token or not self.test_user_id:
+            print("⚠️  Skipping - No admin session or test user ID available")
+            return False
+            
+        success, response = self.run_test(
+            "Update User Role",
+            "PATCH",
+            f"users/{self.test_user_id}/role",
+            200,
+            params={"role": "Production Manager"},
+            auth_token=self.admin_session_token
+        )
+        return success
 
     def test_create_product(self):
         """Test creating a product"""
