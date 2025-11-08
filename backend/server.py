@@ -852,6 +852,143 @@ async def get_adjustments(current_user: User = Depends(get_current_user)):
     return adjustments
 
 
+# ===== MASTERS ENDPOINTS =====
+
+# BOM endpoints
+@api_router.post("/boms", response_model=BOM)
+async def create_bom(bom: BOMCreate, current_user: User = Depends(check_permission(
+    [UserRole.ADMIN, UserRole.PRODUCTION_MANAGER]
+))):
+    # Verify product exists
+    product = await db.products.find_one({"id": bom.product_id})
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Verify all components exist
+    for component in bom.components:
+        comp_product = await db.products.find_one({"id": component.product_id})
+        if not comp_product:
+            raise HTTPException(status_code=404, detail=f"Component product {component.product_id} not found")
+    
+    bom_obj = BOM(**bom.model_dump())
+    await db.boms.insert_one(bom_obj.model_dump())
+    
+    await log_audit(current_user.id, current_user.email, AuditAction.CREATE, "bom", bom_obj.id,
+                   after_data=bom_obj.model_dump())
+    
+    return bom_obj
+
+
+@api_router.get("/boms", response_model=List[BOM])
+async def get_boms(current_user: User = Depends(get_current_user)):
+    boms = await db.boms.find({}, {"_id": 0}).to_list(1000)
+    return boms
+
+
+@api_router.get("/boms/{bom_id}", response_model=BOM)
+async def get_bom(bom_id: str, current_user: User = Depends(get_current_user)):
+    bom = await db.boms.find_one({"id": bom_id}, {"_id": 0})
+    if not bom:
+        raise HTTPException(status_code=404, detail="BOM not found")
+    return bom
+
+
+# WorkCenter endpoints
+@api_router.post("/work-centers", response_model=WorkCenter)
+async def create_work_center(work_center: WorkCenterCreate, current_user: User = Depends(check_permission(
+    [UserRole.ADMIN, UserRole.PRODUCTION_MANAGER]
+))):
+    existing = await db.work_centers.find_one({"code": work_center.code})
+    if existing:
+        raise HTTPException(status_code=400, detail="Work center code already exists")
+    
+    wc_obj = WorkCenter(**work_center.model_dump())
+    await db.work_centers.insert_one(wc_obj.model_dump())
+    
+    await log_audit(current_user.id, current_user.email, AuditAction.CREATE, "work_center", wc_obj.id,
+                   after_data=wc_obj.model_dump())
+    
+    return wc_obj
+
+
+@api_router.get("/work-centers", response_model=List[WorkCenter])
+async def get_work_centers(current_user: User = Depends(get_current_user)):
+    work_centers = await db.work_centers.find({}, {"_id": 0}).to_list(1000)
+    return work_centers
+
+
+# Employee endpoints
+@api_router.post("/employees", response_model=Employee)
+async def create_employee(employee: EmployeeCreate, current_user: User = Depends(check_permission(
+    [UserRole.ADMIN, UserRole.HR_OFFICER]
+))):
+    existing = await db.employees.find_one({"code": employee.code})
+    if existing:
+        raise HTTPException(status_code=400, detail="Employee code already exists")
+    
+    emp_obj = Employee(**employee.model_dump())
+    await db.employees.insert_one(emp_obj.model_dump())
+    
+    await log_audit(current_user.id, current_user.email, AuditAction.CREATE, "employee", emp_obj.id,
+                   after_data=emp_obj.model_dump())
+    
+    return emp_obj
+
+
+@api_router.get("/employees", response_model=List[Employee])
+async def get_employees(current_user: User = Depends(get_current_user)):
+    employees = await db.employees.find({}, {"_id": 0}).to_list(1000)
+    return employees
+
+
+# Supplier endpoints
+@api_router.post("/suppliers", response_model=Supplier)
+async def create_supplier(supplier: SupplierCreate, current_user: User = Depends(check_permission(
+    [UserRole.ADMIN, UserRole.PRODUCTION_MANAGER, UserRole.ACCOUNTANT]
+))):
+    existing = await db.suppliers.find_one({"code": supplier.code})
+    if existing:
+        raise HTTPException(status_code=400, detail="Supplier code already exists")
+    
+    supp_obj = Supplier(**supplier.model_dump())
+    await db.suppliers.insert_one(supp_obj.model_dump())
+    
+    await log_audit(current_user.id, current_user.email, AuditAction.CREATE, "supplier", supp_obj.id,
+                   after_data=supp_obj.model_dump())
+    
+    return supp_obj
+
+
+@api_router.get("/suppliers", response_model=List[Supplier])
+async def get_suppliers(current_user: User = Depends(get_current_user)):
+    suppliers = await db.suppliers.find({}, {"_id": 0}).to_list(1000)
+    return suppliers
+
+
+# Customer endpoints
+@api_router.post("/customers", response_model=Customer)
+async def create_customer(customer: CustomerCreate, current_user: User = Depends(check_permission(
+    [UserRole.ADMIN, UserRole.PRODUCTION_MANAGER, UserRole.ACCOUNTANT]
+))):
+    existing = await db.customers.find_one({"code": customer.code})
+    if existing:
+        raise HTTPException(status_code=400, detail="Customer code already exists")
+    
+    cust_obj = Customer(**customer.model_dump())
+    await db.customers.insert_one(cust_obj.model_dump())
+    
+    await log_audit(current_user.id, current_user.email, AuditAction.CREATE, "customer", cust_obj.id,
+                   after_data=cust_obj.model_dump())
+    
+    return cust_obj
+
+
+@api_router.get("/customers", response_model=List[Customer])
+async def get_customers(current_user: User = Depends(get_current_user)):
+    customers = await db.customers.find({}, {"_id": 0}).to_list(1000)
+    return customers
+
+
 @api_router.get("/")
 async def root():
     return {"message": "Inventory Management API with Authentication"}
