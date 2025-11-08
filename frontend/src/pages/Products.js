@@ -72,10 +72,11 @@ const Products = () => {
               Add Product
             </Button>
           </DialogTrigger>
-          <DialogContent data-testid="product-dialog">
+          <DialogContent data-testid="product-dialog" aria-describedby="product-dialog-description">
             <DialogHeader>
               <DialogTitle>Create New Product</DialogTitle>
             </DialogHeader>
+            <p id="product-dialog-description" className="sr-only">Form to create a new product with code, name, description and unit</p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="code">Product Code</Label>
