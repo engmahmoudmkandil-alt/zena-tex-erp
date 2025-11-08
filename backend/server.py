@@ -15,6 +15,13 @@ import bcrypt
 import requests
 import random
 from twilio.rest import Client
+from models_masters import (
+    BOM, BOMCreate, BOMComponent,
+    WorkCenter, WorkCenterCreate,
+    Employee, EmployeeCreate,
+    Supplier, SupplierCreate,
+    Customer, CustomerCreate
+)
 
 
 ROOT_DIR = Path(__file__).parent
