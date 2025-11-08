@@ -351,14 +351,14 @@ class AuthInventoryAPITester:
         return success
 
     def test_create_bin(self):
-        """Test creating a bin (requires auth)"""
-        if not self.warehouse_id or not self.session_token:
-            print("⚠️  Skipping - No warehouse ID or session token available")
+        """Test creating a bin (requires auth) - using admin token"""
+        if not self.warehouse_id or not self.admin_session_token:
+            print("⚠️  Skipping - No warehouse ID or admin session token available")
             return False
             
         timestamp = datetime.now().strftime('%H%M%S')
         success, response = self.run_test(
-            "Create Bin (Authenticated)",
+            "Create Bin (Admin)",
             "POST",
             "bins",
             200,
@@ -367,7 +367,7 @@ class AuthInventoryAPITester:
                 "code": f"BIN-{timestamp}",
                 "name": f"Test Bin {timestamp}"
             },
-            auth_token=self.session_token
+            auth_token=self.admin_session_token
         )
         if success and 'id' in response:
             self.bin_id = response['id']
