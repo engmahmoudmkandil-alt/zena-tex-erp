@@ -246,7 +246,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   onClick={() => setIsOpen(false)}
                 >
                   <Icon size={20} />
-                  <span>{item.label}</span>
+                  <span>{t(item.label)}</span>
                 </Link>
               );
             })}
@@ -260,7 +260,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             className="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white w-full"
           >
             <LogOut size={20} />
-            <span>Logout</span>
+            <span>{t('nav_logout')}</span>
           </button>
         </div>
       </div>
