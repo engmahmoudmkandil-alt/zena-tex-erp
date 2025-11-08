@@ -346,6 +346,31 @@ function App() {
                 <Layout><AuditLogs /></Layout>
               </ProtectedRoute>
             } />
+            <Route path="/boms" element={
+              <ProtectedRoute>
+                <Layout><BOMs /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/work-centers" element={
+              <ProtectedRoute>
+                <Layout><WorkCenters /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/employees" element={
+              <ProtectedRoute>
+                <Layout><Employees /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/suppliers" element={
+              <ProtectedRoute>
+                <Layout><Suppliers /></Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/customers" element={
+              <ProtectedRoute>
+                <Layout><Customers /></Layout>
+              </ProtectedRoute>
+            } />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
