@@ -321,12 +321,17 @@ class AuthInventoryAPITester:
         return False
 
     def test_get_warehouses(self):
-        """Test getting all warehouses"""
+        """Test getting all warehouses (requires auth)"""
+        if not self.session_token:
+            print("⚠️  Skipping - No session token available")
+            return False
+            
         success, response = self.run_test(
-            "Get Warehouses",
+            "Get Warehouses (Authenticated)",
             "GET",
             "warehouses",
-            200
+            200,
+            auth_token=self.session_token
         )
         if success:
             print(f"   Found {len(response)} warehouses")
