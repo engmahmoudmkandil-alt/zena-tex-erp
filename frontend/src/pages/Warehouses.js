@@ -82,10 +82,11 @@ const Warehouses = () => {
                 Add Warehouse
               </Button>
             </DialogTrigger>
-            <DialogContent data-testid="warehouse-dialog">
+            <DialogContent data-testid="warehouse-dialog" aria-describedby="warehouse-dialog-description">
               <DialogHeader>
                 <DialogTitle>Create New Warehouse</DialogTitle>
               </DialogHeader>
+              <p id="warehouse-dialog-description" className="sr-only">Form to create a new warehouse with code, name and location</p>
               <form onSubmit={handleWarehouseSubmit} className="space-y-4">
                 <div>
                   <Label htmlFor="wh-code">Warehouse Code</Label>
