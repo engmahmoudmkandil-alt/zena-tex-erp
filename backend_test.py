@@ -69,13 +69,14 @@ class AuthInventoryAPITester:
     def test_register_user(self):
         """Test user registration"""
         timestamp = datetime.now().strftime('%H%M%S')
+        self.test_user_email = f"test.user.{timestamp}@example.com"
         success, response = self.run_test(
             "Register User",
             "POST",
             "auth/register",
             200,
             data={
-                "email": f"test.user.{timestamp}@example.com",
+                "email": self.test_user_email,
                 "password": "TestPass123!",
                 "name": f"Test User {timestamp}",
                 "phone": "+1234567890",
@@ -85,24 +86,28 @@ class AuthInventoryAPITester:
         if success and 'user_id' in response:
             self.test_user_id = response['user_id']
             print(f"   Created user ID: {self.test_user_id}")
+            print(f"   Email: {self.test_user_email}")
         return success
 
     def test_register_admin_user(self):
         """Test admin user registration"""
         timestamp = datetime.now().strftime('%H%M%S')
+        self.admin_user_email = f"admin.user.{timestamp}@example.com"
         success, response = self.run_test(
             "Register Admin User",
             "POST",
             "auth/register",
             200,
             data={
-                "email": f"admin.user.{timestamp}@example.com",
+                "email": self.admin_user_email,
                 "password": "AdminPass123!",
                 "name": f"Admin User {timestamp}",
                 "phone": "+1234567891",
                 "role": "Admin"
             }
         )
+        if success:
+            print(f"   Email: {self.admin_user_email}")
         return success
 
     def test_login_user(self):
