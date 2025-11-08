@@ -40,7 +40,7 @@ const Inventory = () => {
       if (filters.product_id) params.append('product_id', filters.product_id);
       if (filters.warehouse_id) params.append('warehouse_id', filters.warehouse_id);
       
-      const response = await axios.get(`${API}/inventory?${params.toString()}`);
+      const response = await axios.get(`${API}/inventory?${params.toString()}`, { withCredentials: true });
       setInventory(response.data);
       setLoading(false);
     } catch (error) {
