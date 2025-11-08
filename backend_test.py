@@ -515,13 +515,13 @@ class AuthInventoryAPITester:
         return success
 
     def test_inventory_adjustment(self):
-        """Test creating an inventory adjustment (requires auth)"""
+        """Test creating an inventory adjustment (requires auth) - using regular user token"""
         if not self.product_id or not self.warehouse_id or not self.session_token:
             print("⚠️  Skipping - Missing product/warehouse ID or session token")
             return False
             
         success, response = self.run_test(
-            "Create Inventory Adjustment (Authenticated)",
+            "Create Inventory Adjustment (Inventory Officer)",
             "POST",
             "adjustments",
             200,
